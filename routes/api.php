@@ -20,6 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/verifyUpload', [FileVerificationController::class, 'verifyUpload'])->name('verifyUpload');
+    Route::post('/verifyUpload', FileVerificationController::class);
 });
 
