@@ -62,19 +62,19 @@ class FileUploadTest extends TestCase
         ]);
 
         $file = UploadedFile::fake()->createWithContent('document.json', $invalidJson);
+
         $response = $this->actingAs($this->user())
-                         ->postJson('/api/verifyUpload', [
-                             'file' => $file,
-                         ]);
+                        ->postJson('/api/verifyUpload', [
+                            'file' => $file,
+                        ]);
 
         $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'issuer' => 'Accredify',
-                         'result' => 'invalid_recipient',
-                     ],
-                 ]);
+                ->assertJson([
+                    'issuer' => 'Accredify',
+                    'result' => 'invalid_recipient',
+                ]);
     }
+
 
     public function test_file_upload_with_invalid_issuer()
     {
@@ -103,18 +103,17 @@ class FileUploadTest extends TestCase
         ]);
 
         $file = UploadedFile::fake()->createWithContent('document.json', $invalidJson);
+
         $response = $this->actingAs($this->user())
-                         ->postJson('/api/verifyUpload', [
-                             'file' => $file,
-                         ]);
+                        ->postJson('/api/verifyUpload', [
+                            'file' => $file,
+                        ]);
 
         $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'issuer' => 'Invalid Issuer',
-                         'result' => 'invalid_issuer',
-                     ],
-                 ]);
+                ->assertJson([
+                    'issuer' => 'Invalid Issuer',
+                    'result' => 'invalid_issuer',
+                ]);
     }
 
     public function test_file_upload_with_invalid_signature()
@@ -145,17 +144,15 @@ class FileUploadTest extends TestCase
 
         $file = UploadedFile::fake()->createWithContent('document.json', $invalidJson);
         $response = $this->actingAs($this->user())
-                         ->postJson('/api/verifyUpload', [
-                             'file' => $file,
-                         ]);
+                        ->postJson('/api/verifyUpload', [
+                            'file' => $file,
+                        ]);
 
         $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'issuer' => 'Accredify',
-                         'result' => 'invalid_signature',
-                     ],
-                 ]);
+                ->assertJson([
+                    'issuer' => 'Accredify',
+                    'result' => 'invalid_signature',
+                ]);
     }
 
     public function test_successful_file_upload()
@@ -186,17 +183,15 @@ class FileUploadTest extends TestCase
 
         $file = UploadedFile::fake()->createWithContent('document.json', $validJson);
         $response = $this->actingAs($this->user())
-                         ->postJson('/api/verifyUpload', [
-                             'file' => $file,
-                         ]);
+                        ->postJson('/api/verifyUpload', [
+                            'file' => $file,
+                        ]);
 
         $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'issuer' => 'Accredify',
-                         'result' => 'verified',
-                     ],
-                 ]);
+                ->assertJson([
+                    'issuer' => 'Accredify',
+                    'result' => 'verified',
+                ]);
     }
 
     /**
