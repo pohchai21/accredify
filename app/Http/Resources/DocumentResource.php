@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FileVerificationResource extends JsonResource
+class DocumentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +15,8 @@ class FileVerificationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'issuer' => $this->data['issuer']['name'] ?? null,
-            'result' => $this->verification_result,
+            'issuer' => $this->issuer,
+            'result' => $this->result,
         ];
     }
 }

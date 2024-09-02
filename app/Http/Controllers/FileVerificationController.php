@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use App\Http\Resources\DocumentResource;
 use App\Services\FileVerificationService;
 use App\Http\Requests\VerifyUploadRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 class FileVerificationController extends Controller
 {
@@ -14,10 +18,12 @@ class FileVerificationController extends Controller
         $this->fileVerificationService = $fileVerificationService;
     }
 
-    public function __invoke(VerifyUploadRequest $request)
+    public function __invoke(VerifyUploadRequest $request): JsonResponse
     {
         $file = $request->file('file');
         $jsonData = json_decode(file_get_contents($file->getRealPath()), true);
-        return $this->fileVerificationService->verifyFileUpload($jsonData);
+        $verificationResultDTO = $this->fileVerificationService->verifyFileUpload($jsonData);
+
+        return new JsonResponse(new DocumentResource($verificationResultDTO), Response::HTTP_OK);
     }
 }

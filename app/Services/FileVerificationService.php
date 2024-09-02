@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\FileVerification;
 use App\Enums\VerificationResult;
-use App\Http\Resources\FileVerificationResource;
+use App\DTO\VerificationResultDTO;
 use Illuminate\Support\Facades\Http;
 
 class FileVerificationService
@@ -116,17 +116,15 @@ class FileVerificationService
 
     private function storeResult($jsonData, VerificationResult $result)
     {
-        $fileVerification = FileVerification::create([
+        FileVerification::create([
             'user_id' => auth()->id(),
             'file_type' => 'JSON',
             'verification_result' => $result->value,
         ]);
 
-        return response()->json([
-            'data' => [
-                'issuer' => $jsonData['data']['issuer']['name'] ?? null,
-                'result' => $result->value,
-            ],
-        ]);
+        return new VerificationResultDTO(
+            $jsonData['data']['issuer']['name'] ?? '',
+            $result->value
+        );
     }
 }

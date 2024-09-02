@@ -68,7 +68,6 @@
                 }
             });
 
-            // Handle file upload
             function handleFileSelect() {
                 const file = fileInput.files[0];
 
@@ -86,18 +85,25 @@
                             'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
                         }
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.data) {
-                            const issuer = data.data.issuer ? data.data.issuer : 'Unknown';
-                            const result = data.data.result ? data.data.result : 'Unknown result';
-                            messageDiv.innerHTML = `<p>Issuer: ${issuer}</p><p>Result: ${result}</p>`;
-                        } else {
-                            messageDiv.innerHTML = `<p>${data.message}</p>`;
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.message || 'Validation error');
+                            });
                         }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const issuer = data.issuer || 'Unknown';
+                        const result = data.result || 'Unknown result';
+                        messageDiv.innerHTML = `<p>Issuer: ${issuer}</p><p>Result: ${result}</p>`;
                     })
                     .catch(error => {
-                        messageDiv.innerHTML = `<p>Error uploading file. Please try again.</p>`;
+                        if (error.message === 'Validation error') {
+                            messageDiv.innerHTML = `<p>Validation error: ${error.message}</p>`;
+                        } else {
+                            messageDiv.innerHTML = `<p>An unexpected error occurred: ${error.message}</p>`;
+                        }
                     });
                 }
             }
